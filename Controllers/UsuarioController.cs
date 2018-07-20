@@ -24,5 +24,24 @@ namespace NetCoreSql.Controllers
       if (Item == null) return NotFound();
       return Ok(Item);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] Usuario Data)
+    {
+      if (!ModelState.IsValid) return BadRequest(ModelState);
+      await Context.Usuarios.AddAsync(Data);
+      await Context.SaveChangesAsync();
+      return Ok("Creado");
+    }
+
+    [HttpDelete("Id")]
+    public async Task<IActionResult> Delete(string Id)
+    {
+      var Item = Context.Usuarios.FirstOrDefault(item => item.Id == Id);
+      if (Item == null) return NotFound();
+      Context.Usuarios.Remove(Item);
+      await Context.SaveChangesAsync();
+      return Ok("Eliminado");
+    }
   }
 }
