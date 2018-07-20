@@ -7,14 +7,22 @@ using NetCoreSql.Models;
 
 namespace NetCoreSql.Controllers
 {
-    [Route("Users")]
-    public class UsuarioController : Controller
+  [Route("Users")]
+  public class UsuarioController : Controller
+  {
+    private readonly DbContextApp Context;
+
+    public UsuarioController(DbContextApp Cont) => Context = Cont;
+
+    [HttpGet]
+    public IActionResult Get() => Ok(Context.Usuarios.ToList());
+
+    [HttpGet("{Id}")]
+    public IActionResult Get(string Id)
     {
-        private readonly DbContextApp Context;
-
-        public UsuarioController(DbContextApp Cont) => Context = Cont;
-
-        [HttpGet]
-        public IActionResult Get() => Ok(Context.Usuarios.ToList());
+      var Item = Context.Usuarios.FirstOrDefault(item => item.Id == Id);
+      if (Item == null) return NotFound();
+      return Ok(Item);
+    }
   }
 }
