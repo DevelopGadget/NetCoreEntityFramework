@@ -34,7 +34,15 @@ namespace NetCoreSql.Controllers
       return Ok("Creado");
     }
 
-    [HttpDelete("Id")]
+    [HttpPut("{Id}")]
+    public async Task<IActionResult> Put([FromBody] Usuario Data, string Id){
+      if(Data.Id != Id) return NotFound();
+      Context.Entry(Data).State = EntityState.Modified;
+      await Context.SaveChangesAsync();
+      return Ok();
+    }
+
+    [HttpDelete("{Id}")]
     public async Task<IActionResult> Delete(string Id)
     {
       var Item = Context.Usuarios.FirstOrDefault(item => item.Id == Id);
